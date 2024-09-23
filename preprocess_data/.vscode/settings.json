@@ -1,0 +1,9 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/work/liuzehua/task/NCMMSC/new_one/CNVSRC2023Baseline/preparation"
+    ],
+    "python.analysis.extraPaths": [
+        "/work/liuzehua/task/NCMMSC/new_one/CNVSRC2023Baseline/preparation"
+    ],
+    //"python.pythonPath": "/work/liuzehua/task/NCMMSC/new_one/CNVSRC2023Baseline/preparation"
+}

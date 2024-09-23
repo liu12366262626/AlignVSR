@@ -1,0 +1,114 @@
+csv_name: train
+code_root_dir: /work/liuzehua/task/VSR/cnvsrc
+data_root_dir: /work/liuzehua/task/VSR/data/LRS/LRS2-BBC
+# data_root_dir: /work/liuzehua/task/VSR/data
+
+
+gpus: 1
+CAM_path: /work/liuzehua/task/VSR/cnvsrc/main_log/2024-08-29/20-39-09-model5-Phase2-asr/model/epoch=33-valid_decoder_acc=0.8461.ckpt_infer_asr_test/epoch=33-valid_decoder_acc=0.8461.ckpt
+infer_ckpt_path: /work/liuzehua/task/VSR/cnvsrc/main_log/2024-09-05/14-29-49-model5-Phase3-vsr2asr-v2-lrs2-all-asr-72/model/epoch=83-valid_asr2vsr_decoder_acc=0.8071.ckpt
+device: cuda
+loss:
+  asr2vsr_att_w: 0.9
+  ctc_w: 0.1
+  a2v_attscore:
+    step: 2
+    window_size: 10
+    a2v_attscore_w: 0.1
+
+
+save:
+  save_path: ${infer_ckpt_path}_infer_vsr_${data.dataset.val_file}
+  hydra_dir: ${save.save_path}
+  save_json: ${save.save_path}/result.json  
+
+
+data:
+  batch_max_frames: 1000
+  max_frames: 1000
+  max_frames_val: 1000
+  dataset:
+    root: ${code_root_dir}
+    label_dir: /work/liuzehua/task/VSR/cnvsrc/data/vsr2asr/model5/Phase3/LRS2
+    train_file: ${csv_name}.csv #code_root_dit/label_dir/train_file 
+    val_file: test.csv
+    test_file: test.csv
+    num_workers: 16 #控制dataloader加载数据的进程数
+
+model:
+  visual_backbone:
+    adim: 768
+    aheads: 12
+    eunits: 3072
+    elayers: 4
+    transformer_input_layer: conv3d
+    dropout_rate: 0.1
+    transformer_attn_dropout_rate: 0.1
+    transformer_encoder_attn_layer_type: rel_mha
+    macaron_style: true
+    use_cnn_module: true
+    cnn_module_kernel: 31
+    zero_triu: false
+    a_upsample_ratio: 1
+    relu_type: swish
+    ddim: ${model.visual_backbone.adim}
+    dheads: ${model.visual_backbone.aheads}
+    dunits: 3072
+    dlayers: 6
+    lsm_weight: 0.1
+    transformer_length_normalized_loss: false
+    mtlalpha: 0.1
+    ctc_type: builtin
+    rel_pos_type: latest
+  
+  Hybird_AVEncoder:
+    num_layers: 4
+    abm:
+      embed_size: 768
+      num_heads: 12
+      num_layers: 1
+      dropout_rate: 0.1
+
+  audio_backbone:
+    adim: 768
+    aheads: 12
+    eunits: 3072
+    elayers: 12
+    transformer_input_layer: conv1d
+    dropout_rate: 0.1
+    transformer_attn_dropout_rate: 0.1
+    transformer_encoder_attn_layer_type: rel_mha
+    macaron_style: true
+    use_cnn_module: true
+    cnn_module_kernel: 31
+    zero_triu: false
+    a_upsample_ratio: 1
+    relu_type: swish
+    ddim: ${model.audio_backbone.adim}
+    dheads: ${model.audio_backbone.aheads}
+    dunits: 3072
+    dlayers: 6
+    lsm_weight: 0.1
+    transformer_length_normalized_loss: false
+    mtlalpha: 0.1
+    ctc_type: builtin
+    rel_pos_type: latest
+
+
+hydra:
+  run:
+    dir: ${save.hydra_dir}
+  job_logging:
+    root:
+      handlers: [console, file]
+      level: DEBUG
+    handlers:
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        mode: a
+    formatters:
+      simple:
+        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+
