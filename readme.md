@@ -1,7 +1,7 @@
 "This repository is directly related to the AlignVSR paper. We will continue to maintain and improve the code in the future."
 
 <div align="center">
-    <img src="example.gif" width="400" />
+    <img src="example.gif" width="256" />
 </div>
 
 
