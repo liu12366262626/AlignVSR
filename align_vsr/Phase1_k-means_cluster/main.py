@@ -6,57 +6,72 @@ from transformers import Wav2Vec2FeatureExtractor, HubertModel
 from sklearn.cluster import KMeans
 from tqdm import tqdm
 from joblib import dump
-# from cuml.cluster import KMeans
 import pickle
-# 设置CUDA设备
-os.environ['CUDA_VISIBLE_DEVICES'] = '2'
+import argparse
+
+# Set CUDA device
 device = 'cuda'
 
-# 加载模型
-model_path = "/work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/English-hubert-large"
-feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(model_path)
-model = HubertModel.from_pretrained(model_path)
-model.to(device)
-model.half()  # 使用半精度加快运算速度
-model.eval()
+# Parse command line arguments
+def parse_args():
+    parser = argparse.ArgumentParser(description="Wav2Vec2 Feature Extraction and KMeans Clustering")
+    parser.add_argument('--model_path', type=str, required=True, help='Path to the pretrained model directory')
+    parser.add_argument('--folder_path', type=str, required=True, help='Path to the folder containing wav files')
+    parser.add_argument('--save_path', type=str, required=True, help='Path to save the KMeans model')
+    parser.add_argument('--cuda_visible_devices', type=str, default='0', help='CUDA device to use, default is 0')
+    parser.add_argument('--num_files', type=int, default=10000, help='Number of audio files to process, default is 10000')
+    parser.add_argument('--n_clusters', type=int, default=200, help='Number of clusters for KMeans, default is 200')
+    return parser.parse_args()
 
-# 指定文件夹路径
-folder_path = '/work/liuzehua/task/VSR/data/LRS/LRS2-BBC/lrs2/lrs2_video_seg24s/pretrain'
+# Main program
+def main():
+    args = parse_args()
 
-# 存储所有特征的列表
-all_features = []
-aaaa = []
-count = 0
-# 遍历文件夹处理每个wav文件
-for root, dirs, files in tqdm(os.walk(folder_path)):
-    for file in tqdm(files, desc="Processing audio files", unit="file"):
-        if file.endswith('.wav'):
-            count = count + 1
-            wav_path = os.path.join(root, file)
-            wav, sr = sf.read(wav_path)
-            aaaa.append(wav_path)
-            input_values = feature_extractor(wav, return_tensors="pt", sampling_rate=sr).input_values
-            input_values = input_values.half()
-            input_values = input_values.to(device)
+    # Set CUDA device
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.cuda_visible_devices
 
-            with torch.no_grad():
-                outputs = model(input_values)
-                features = outputs.last_hidden_state.squeeze().cpu().numpy()  # 转为numpy数组
-                all_features.append(features)
-    print(f'count_num: {count}')
-    if count >= 20000:
-        break
+    # Load model
+    feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(args.model_path)
+    model = HubertModel.from_pretrained(args.model_path)
+    model.to(device)
+    model.half()  # Use half precision to speed up computation
+    model.eval()
 
-print(len(all_features))
+    # List to store all features
+    all_features = []
+    aaaa = []
+    count = 0
 
-# 将所有特征堆叠成一个大数组
-all_features = np.vstack(all_features)
+    # Iterate through the folder and process each wav file
+    for root, dirs, files in tqdm(os.walk(args.folder_path)):
+        for file in tqdm(files, desc="Processing audio files", unit="file"):
+            if file.endswith('.wav'):
+                count += 1
+                wav_path = os.path.join(root, file)
+                wav, sr = sf.read(wav_path)
+                aaaa.append(wav_path)
+                input_values = feature_extractor(wav, return_tensors="pt", sampling_rate=sr).input_values
+                input_values = input_values.half()
+                input_values = input_values.to(device)
 
-# 执行k-means聚类
-kmeans = KMeans(n_clusters=500, random_state=0).fit(all_features)
+                with torch.no_grad():
+                    outputs = model(input_values)
+                    features = outputs.last_hidden_state.squeeze().cpu().numpy()  # Convert to numpy array
+                    all_features.append(features)
+            
+            if count >= args.num_files:
+                break
+    
+    print(f'Total number of files processed: {count}')
 
+    # Stack all features into one large array
+    all_features = np.vstack(all_features)
 
-save_path = '/work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/Phase1_k-means_cluster'
+    # Perform k-means clustering
+    kmeans = KMeans(n_clusters=args.n_clusters, random_state=0).fit(all_features)
 
-# 保存模型到文件
-dump(kmeans, f'{save_path}/kmeans_model_lrs2_500class_20k.joblib')
+    # Save the model to file
+    dump(kmeans, f'{args.save_path}/kmeans_model.joblib')
+
+if __name__ == "__main__":
+    main()
