@@ -1,5 +1,9 @@
 "This repository is directly related to the AlignVSR paper. We will continue to maintain and improve the code in the future."
-![Example GIF](example.gif)
+
+
+<img src="example.gif" width="256" height="256" />
+
+
 # Preprocess
 We have adopted a consistent approach with the [AUTO-AVSR repository](https://github.com/mpc001/auto_avsr) for preprocessing the LRS2 and Single datasets.
 Then, following the steps from [AUTO-AVSR (preparation)](https://github.com/mpc001/auto_avsr/tree/main/preparation), we process the LRS2 and CNVSRC.Single datasets to generate the corresponding `train.csv` and `test.csv`.
