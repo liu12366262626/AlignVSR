@@ -9,12 +9,15 @@ import random
 import torch
 import torchaudio
 import torchvision
+from pathlib import Path
+# 获取当前文件的上两级目录
+grandparent_dir = Path(__file__).resolve().parents[2]
 
 
-NOISE_FILENAME = '/work/liuzehua/task/VSR/cnvsrc/datamodule/babble_noise.wav'
+NOISE_FILENAME = f'{str(grandparent_dir)}/datamodule/babble_noise.wav'
 
 
-DICT_PATH = '/work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/English_unigram/unigram5000_units.txt'
+DICT_PATH = f'{str(grandparent_dir)}/align_vsr/English_unigram/unigram5000_units.txt'
 
 
 class FunctionalModule(torch.nn.Module):
