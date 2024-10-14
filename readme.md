@@ -1,7 +1,8 @@
 "This repository is directly related to the AlignVSR paper. We will continue to maintain and improve the code in the future."
 
-
-<img src="example.gif" width="256" height="256" />
+<div align="center">
+    <img src="example.gif" width="256" />
+</div>
 
 
 # Preprocess

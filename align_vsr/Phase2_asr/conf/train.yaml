@@ -1,0 +1,131 @@
+csv_name: train
+code_root_dir: /work/liuzehua/task/VSR/cnvsrc
+audio_data_root_dir: /work/liuzehua/task/VSR/data/LRS/LRS2-BBC
+
+
+
+gpus: 1
+hubert_model: /work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/English-hubert-large
+k_means_model: /work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/Phase1_k-means_cluster/kmeans_model.joblib
+pretrained_model: null
+
+loss:
+  att_w: 0.9
+  ctc_w: 0.1
+
+save:
+  save_path: '/work/liuzehua/task/VSR/cnvsrc/main_log/temp'
+  tblog_dir: ${save.save_path}/tblog
+  hydra_dir: ${save.save_path}
+  trainer_save_dir: ${save.save_path}
+  save_train_model: ${save.save_path}/model
+  save_valid_model: ${save.save_path}/model
+  save_train_topk: 2
+  save_valid_topk: 5
+
+trainer:
+  precision: 32 #使用32位浮点数进行运算
+  max_epochs: 80
+  gpus: -1
+  sync_batchnorm: true #在分布式训练中，批量归一化将在所有 GPU 间同步，有助于保持数据一致性。
+  default_root_dir: ${save.trainer_save_dir} #训练中所有输出的保存路径
+  num_sanity_val_steps: 0 # 在开始训练之前，用于运行几个验证步骤以确保验证循环可以正常工作。设置为 0 表示不执行这些验证步骤。
+  limit_val_batches: 1.0 #使用全部验证集验证
+  accumulate_grad_batches: 1 #不进行梯度累计
+  gradient_clip_val: 5.0 #这个参数用于防止梯度爆炸问题，通过将梯度的范数限制在指定的值 5.0。
+  replace_sampler_ddp: false #自己设置了采样器，不用默认的
+  resume_from_checkpoint: null
+
+optimizer:
+  name: adamw
+  lr: 0.00012
+  warmup_epochs: 4
+  weight_decay: 0.03
+  betas:
+  - 0.9
+  - 0.98
+
+data:
+  batch_max_frames: 1000
+  max_frames: 1000
+  max_frames_val: 1000
+  dataset:
+    root: ${code_root_dir}
+    label_dir: /work/liuzehua/task/VSR/cnvsrc/data/vsr2asr/model5/Phase2/LRS2
+    train_file: ${csv_name}.csv #code_root_dit/label_dir/train_file 
+    val_file: test.csv
+    test_file: test.csv
+    num_workers: 16 #控制dataloader加载数据的进程数
+
+model:
+  visual_backbone:
+    adim: 768
+    aheads: 12
+    eunits: 3072
+    elayers: 12
+    transformer_input_layer: conv3d
+    dropout_rate: 0.1
+    transformer_attn_dropout_rate: 0.1
+    transformer_encoder_attn_layer_type: rel_mha
+    macaron_style: true
+    use_cnn_module: true
+    cnn_module_kernel: 31
+    zero_triu: false
+    a_upsample_ratio: 1
+    relu_type: swish
+    ddim: ${model.visual_backbone.adim}
+    dheads: ${model.visual_backbone.aheads}
+    dunits: 3072
+    dlayers: 6
+    lsm_weight: 0.1
+    transformer_length_normalized_loss: false
+    mtlalpha: 0.1
+    ctc_type: builtin
+    rel_pos_type: latest
+    visual_frontend:
+      transformer_layer: 6
+    visual_backend:
+      transformer_layer: 6
+
+  audio_backbone:
+    adim: 768
+    aheads: 12
+    eunits: 3072
+    elayers: 12
+    transformer_input_layer: conv1d
+    dropout_rate: 0.1
+    transformer_attn_dropout_rate: 0.1
+    transformer_encoder_attn_layer_type: rel_mha
+    macaron_style: true
+    use_cnn_module: true
+    cnn_module_kernel: 31
+    zero_triu: false
+    a_upsample_ratio: 1
+    relu_type: swish
+    ddim: ${model.audio_backbone.adim}
+    dheads: ${model.audio_backbone.aheads}
+    dunits: 3072
+    dlayers: 6
+    lsm_weight: 0.1
+    transformer_length_normalized_loss: false
+    mtlalpha: 0.1
+    ctc_type: builtin
+    rel_pos_type: latest
+
+hydra:
+  run:
+    dir: ${save.hydra_dir}
+  job_logging:
+    root:
+      handlers: [console, file]
+      level: DEBUG
+    handlers:
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        mode: a
+    formatters:
+      simple:
+        format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+
