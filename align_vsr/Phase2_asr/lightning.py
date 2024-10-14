@@ -1,15 +1,13 @@
-import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 import torch
 from cosine import WarmupCosineScheduler
-from vsr2asr.model5.Phase2_asr.transforms import TextTransform
+from Phase2_asr.transforms import TextTransform
 import logging
 
 # for testing
 from espnet.asr.asr_utils import add_results_to_json
 from pytorch_lightning import LightningModule
-from vsr2asr.model5.Phase2_asr.asr_model import ASR
+from Phase2_asr.asr_model import ASR
 
 
 
@@ -68,15 +66,6 @@ class ModelModule(LightningModule):
         scheduler = {"scheduler": scheduler, "interval": "step", "frequency": 1}
         return [optimizer], [scheduler]
 
-    def forward(self, sample):
-        # self.beam_search = get_beam_search_decoder(self.model, self.token_list, ctc_weight=self.backbone_args.mtlalpha, lm_weight=self.cfg.lm_weight)
-        enc_feat, _ = self.model.encoder(sample.unsqueeze(0).to(self.device), None)
-        # enc_feat = enc_feat.squeeze(0)
-        # nbest_hyps = self.beam_search(enc_feat)
-        # nbest_hyps = [h.asdict() for h in nbest_hyps[: min(len(nbest_hyps), 1)]]
-        # predicted = add_results_to_json(nbest_hyps, self.token_list)
-        # predicted = predicted.replace("▁", " ").strip().replace("<eos>", "")
-        return None
 
     def training_step(self, batch, batch_idx):
         return self._step(batch, batch_idx, step_type="train")

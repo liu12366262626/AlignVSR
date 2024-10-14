@@ -1,11 +1,16 @@
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+
+custom_path = os.getenv('CUSTOM_PATH')
+if custom_path is None:
+    raise ValueError("Environment variable 'CUSTOM_PATH' is not set. Please provide the path via the shell script.")
+sys.path.append(custom_path)
+
 import os
 # os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import hydra
 import torch
-from vsr2asr.model5.Phase2_asr.asr_dataset import DataModule
-from vsr2asr.model5.Phase2_asr.lightning import ModelModule
+from Phase2_asr.asr_dataset import DataModule
+from Phase2_asr.lightning import ModelModule
 from pytorch_lightning import seed_everything, Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.strategies import DDPStrategy
@@ -13,7 +18,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from omegaconf import DictConfig
 
 
-@hydra.main(config_path="/work/liuzehua/task/VSR/cnvsrc/conf/vsr2asr/model5/Phase2_asr", config_name= "train.yaml")
+@hydra.main(config_path="/work/liuzehua/task/VSR/AlignVSR/align_vsr/Phase2_asr/conf", config_name= "train.yaml")
 def main(cfg: DictConfig) -> None:
         seed_everything(42, workers=True)  #workers=True 指示 PyTorch Lightning 在初始化数据加载器的工作进程时也应该设置种子。
         cfg.gpus = torch.cuda.device_count()

@@ -2,7 +2,7 @@ import sys
 sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
 import os
 import hydra
-from vsr2asr.model5.Phase2_asr.transforms import TextTransform
+from Phase2_asr.transforms import TextTransform
 import json
 import multiprocessing
 import logging
@@ -33,8 +33,8 @@ def task_on_gpu(gpu_id, cfg, fns, target_content, return_dic, task_id):
             import soundfile as sf
             import os
             import torchvision, torchmetrics
-            from vsr2asr.model5.Phase2_asr.asr_model import ASR
-            from vsr2asr.model5.Phase2_asr.transforms import TextTransform
+            from Phase2_asr.asr_model import ASR
+            from Phase2_asr.transforms import TextTransform
             from espnet.asr.asr_utils import add_results_to_json, get_model_conf, torch_load
             from espnet.nets.batch_beam_search import BatchBeamSearch
             from espnet.nets.lm_interface import dynamic_import_lm
@@ -192,7 +192,7 @@ def task_on_gpu(gpu_id, cfg, fns, target_content, return_dic, task_id):
 
 
 
-@hydra.main(config_path="/work/liuzehua/task/VSR/cnvsrc/conf/vsr2asr/model5/Phase2_asr", config_name="inference_asr")
+@hydra.main(config_path="/work/liuzehua/task/VSR/AlignVSR/align_vsr/Phase2_asr/conf", config_name="inference_asr")
 def main(cfg):
     multiprocessing.set_start_method('spawn', force=True)
     manager = multiprocessing.Manager()
@@ -209,7 +209,7 @@ def main(cfg):
 
     # 您所拥有的GPU列表
     available_gpus = [0,1,2,3,4,5]
-    gpu_process_num = [3,0,0,0,3,3]
+    gpu_process_num = [1,0,0,0,0,0]
     split_num = sum(gpu_process_num)
 
             

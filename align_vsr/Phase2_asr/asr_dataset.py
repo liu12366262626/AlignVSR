@@ -4,12 +4,12 @@ import os
 import logging
 import torch
 from pytorch_lightning import LightningDataModule
-from vsr2asr.model5.Phase2_asr.samplers import (
+from Phase2_asr.samplers import (
     ByFrameCountSampler,
     DistributedSamplerWrapper,
     RandomSamplerWrapper,
 )
-from vsr2asr.model5.Phase2_asr.transforms import AudioTransform, VideoTransform
+from Phase2_asr.transforms import AudioTransform, VideoTransform
 import torchaudio
 import torchvision
 from espnet.nets.pytorch_backend.backbones.conv1d_extractor import Conv1dResNet
