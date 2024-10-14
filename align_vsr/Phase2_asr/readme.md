@@ -4,7 +4,7 @@ This repository contains a script for training an Automatic Speech Recognition (
 
 ## Script Overview
 
-The provided `train_asr.sh` script is used to initiate the training process of an ASR model. The script sets up necessary environment variables and directories, and runs the training using specific audio data, models, and configurations.
+The provided `run.sh` script is used to initiate the training process of an ASR model. The script sets up necessary environment variables and directories, and runs the training using specific audio data, models, and configurations.
 
 ### Key Parameters
 
