@@ -1,5 +1,11 @@
 ## Dataset Directory Structure
-dataset/ ├── Phase2/ │ ├── test.csv │ └── train.csv ├── Phase3/ │ ├── test.csv │ └── train.csv
+dataset
+├── Phase2 
+ ├── test.csv 
+  └── train.csv 
+├── Phase3
+ ├── test.csv 
+  └── train.csv
 
 # Dataset Preparation for Training
 
