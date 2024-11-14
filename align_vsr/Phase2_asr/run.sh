@@ -15,11 +15,11 @@ export CUSTOM_PATH=$code_root_dir
 CUDA_VISIBLE_DEVICES=0,1 python main.py save.save_path=$save_path \
                         code_root_dir=$code_root_dir\
                         audio_data_root_dir= \
-                        csv_name = \
-                        hubert_model = \
-                        k_means_model = \
-                        data.dataset.label_dir = \
-                        data.dataset.val_file = \
+                        csv_name= \
+                        hubert_model= \
+                        k_means_model= \
+                        data.dataset.label_dir= \
+                        data.dataset.val_file= \
 
 #exmaple
 # CUDA_VISIBLE_DEVICES=0,1 python main.py save.save_path=$save_path \
