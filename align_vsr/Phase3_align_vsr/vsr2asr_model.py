@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+sys.path.append('./align_vsr')
 import torch
 from espnet.nets.pytorch_backend.transformer.add_sos_eos import add_sos_eos
 from espnet.nets.pytorch_backend.nets_utils import (
@@ -17,7 +17,7 @@ from espnet.nets.pytorch_backend.backbones.conv3d_extractor import Conv3dResNet
 from espnet.nets.pytorch_backend.nets_utils import rename_state_dict
 
 # from espnet.nets.pytorch_backend.transducer.vgg import VGG2L
-from vsr2asr.model5.Phase3_vsr2asr_v2.attention import (
+from align_vsr.Phase3_align_vsr.attention import (
     RelPositionMultiHeadedAttention,  # noqa: H301
     CrossMultiHeadedAttention,
     RelPositionCrossMultiHeadedAttention
@@ -110,77 +110,6 @@ class MaximizeAttentionLoss(nn.Module):
 
 
         return total_loss
-
-
-#smooth
-# class MaximizeAttentionLoss(nn.Module):
-#     def __init__(self, step, window_size):
-#         super(MaximizeAttentionLoss, self).__init__()
-#         self.step = step
-#         self.window_size = window_size
-
-#         # 设置总长度
-#         length = 2*window_size + 1
-#         # 计算中心点索引
-#         center_index = length // 2
-#         # 生成从中心向两边的指数递减序列
-#         indices = torch.arange(center_index + 1)
-#         values = 0.5 ** indices
-#         # 创建完整序列，中心向两边对称
-#         sequence = torch.cat((values[1:].flip(dims=[0]), values))
-#         self.w_matrix = sequence
-#         self.center_index = center_index
-
-#     def forward(self, attention_scores, target_indices, video_length):
-#         device = video_length.device
-#         w_matrix = self.w_matrix.to(device)
-#         total_loss = 0.0
-#         B,H,T_b,A = attention_scores[0].size()
-#         window_size = self.window_size
-#         step = self.step
-
-#         attention_score = torch.zeros_like(attention_scores[0], device = attention_scores[0].device)
-#         for item in attention_scores:    
-#             attention_score = attention_score + item
-#         attention_score = attention_score/len(attention_scores)  
-
-#         attention_score =torch.sum(attention_score, dim=1)/H
-
-
-#         attention_score = attention_score.reshape(-1, A)
-#         labels_w = torch.zeros_like(attention_score)
-
-#         for batch_idx in range(B):
-#             cam_label = target_indices[batch_idx]
-#             T = video_length[batch_idx]
-#             # 计算第一列的值
-#             # 生成从0到2*T的偶数（不包括2*T）
-#             centers = torch.arange(0, 2*T, step, device = device)
-#             # 使用整数类型的张量，并确保计算结果在整数类型中
-#             start_indices = torch.max(torch.zeros(T, dtype=torch.long, device = device), centers - (window_size // 2))
-#             start_indices = torch.min((2 * T - 1 - window_size) * torch.ones(T, dtype=torch.long, device = device), start_indices)
-#             indices = start_indices.unsqueeze(1) + torch.arange(window_size, dtype=torch.long, device = device)
-
-#             audio_indices = cam_label[indices]
-
-
-#             start_w = start_indices - centers
-#             indices_w = start_w.unsqueeze(1) + torch.arange(window_size, dtype=torch.long, device = device) + self.center_index
-#             w = w_matrix[indices_w]
-            
-#             rows = torch.arange(start= T_b * batch_idx, end = T + T_b * batch_idx, device=device, dtype=torch.long).unsqueeze(1).expand(-1, window_size)
-
-#             for i in range(window_size):
-#                 temp = torch.zeros_like(labels_w, device = device)
-#                 temp[rows[:,i],audio_indices[:,i]] = w[:,i]
-#                 labels_w = labels_w + temp
-            
-#             # labels[rows, audio_indices] = 1
-
-#         total_loss = -torch.sum(labels_w * torch.log(attention_score + 1e-8)) / torch.sum(video_length)
-
-
-#         return total_loss
 
 
 
@@ -429,19 +358,6 @@ class V2A(torch.nn.Module):
             self_attention_dropout_rate=args.transformer_attn_dropout_rate,
             src_attention_dropout_rate=args.transformer_attn_dropout_rate,
         )
-        # if self.cfg.model.Bi_transformer_decoder.exist:
-        #     self.r_decoder = Decoder(
-        #             odim=odim,
-        #             attention_dim=args.ddim,
-        #             attention_heads=args.dheads,
-        #             linear_units=args.dunits,
-        #             num_blocks=self.cfg.model.Bi_transformer_decoder.layers,
-        #             dropout_rate=args.dropout_rate,
-        #             positional_dropout_rate=args.dropout_rate,
-        #             self_attention_dropout_rate=args.transformer_attn_dropout_rate,
-        #             src_attention_dropout_rate=args.transformer_attn_dropout_rate,
-        #         )
-
 
 
         self.ctc = CTC(
@@ -449,7 +365,6 @@ class V2A(torch.nn.Module):
         )
 
         self.v2a_loss = MaximizeAttentionLoss(cfg.loss.a2v_attscore.step, cfg.loss.a2v_attscore.window_size)
-
 
 
 
@@ -467,7 +382,6 @@ class V2A(torch.nn.Module):
 
 
 
-        # video_feature, attention_weights = self.abm(video_feature, self.cam, video_padding_mask)
 
         a2v_attscore_loss =self.v2a_loss(att_weights, audio_label, video_length)
 
@@ -486,27 +400,13 @@ class V2A(torch.nn.Module):
             decoder_feat.view(-1, self.odim), ys_out_pad, ignore_label=self.ignore_id
         )
 
-        # #reversed part
-        # reversed_label = torch.flip(label, dims=[2])
-        # ys_in_pad_reversed, ys_out_pad_reversed = add_sos_eos(reversed_label, self.sos, self.eos, self.ignore_id)
-        # pred_pad_reversed, _ = self.r_decoder(ys_in_pad_reversed, ys_mask, video_feature, video_padding_mask)
-        # loss_att_reversed = self.criterion(pred_pad_reversed, ys_out_pad_reversed)
 
-        # acc_reversed = th_accuracy(
-        #     pred_pad_reversed.view(-1, self.odim), ys_out_pad_reversed, ignore_label=self.ignore_id
-        # )
 
         asr2vsr_att_w = self.cfg.loss.asr2vsr_att_w
         ctc_w = self.cfg.loss.ctc_w
         a2v_attscore_loss_w = self.cfg.loss.a2v_attscore.a2v_attscore_w
-        # r_att_w = self.cfg.loss.r_att_w 
 
-        # loss = asr2vsr_att_w * asr2vsr_loss_att + ctc_w * loss_ctc + a2v_attscore_loss_w * a2v_attscore_loss 
-
-
-        # return loss, asr2vsr_loss_att, asr2vsr_acc, loss_ctc, a2v_attscore_loss
-
-        loss = asr2vsr_att_w * asr2vsr_loss_att + ctc_w * loss_ctc 
+        loss = asr2vsr_att_w * asr2vsr_loss_att + ctc_w * loss_ctc + a2v_attscore_loss_w * a2v_attscore_loss 
 
 
         return loss, asr2vsr_loss_att, asr2vsr_acc, loss_ctc, a2v_attscore_loss

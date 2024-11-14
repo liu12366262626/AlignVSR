@@ -1,8 +1,8 @@
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+sys.path.append('./align_vsr')
 import os
 import hydra
-from vsr2asr.model5.Phase3_vsr2asr_v2.transforms import TextTransform
+from align_vsr.Phase3_align_vsr.transforms import TextTransform
 import json
 import multiprocessing
 import logging

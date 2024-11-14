@@ -4,7 +4,7 @@ from typing import Iterator, Optional
 import numpy as np
 import torch
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc/tools/fairseq')
+sys.path.append('./tools/fairseq')
 from fairseq.data import data_utils
 from torch.utils.data import Dataset, DistributedSampler, RandomSampler
 from torch.utils.data.sampler import Sampler

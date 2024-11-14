@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+sys.path.append('./align_vsr')
 from pytorch_lightning.utilities.types import STEP_OUTPUT
 import torch
 from cosine import WarmupCosineScheduler

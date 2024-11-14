@@ -1,10 +1,10 @@
 import os
 # os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+sys.path.append('./align_vsr')
 import hydra
 import torch
-from vsr2asr.model5.Phase3_vsr2asr_v2.vsr2asr_dataset import DataModule
+from align_vsr.Phase3_align_vsr.vsr2asr_dataset import DataModule
 from lightning import ModelModule
 from pytorch_lightning import seed_everything, Trainer
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint

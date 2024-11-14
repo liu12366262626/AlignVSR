@@ -5,7 +5,7 @@ video_data_root_dir: /work/liuzehua/task/VSR/data/LRS/LRS2-BBC
 k_means_model: /work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/Phase1_k-means_cluster/kmeans_model.joblib
 hubert_model: /work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/English-hubert-large
 gpus: 1
-pretrained_model: /work/liuzehua/task/VSR/cnvsrc/main_log/2024-09-10/21-09-54-model5-Phase3-vsr2asr-v2-lrs2-4s-model3/model/epoch=39-valid_asr2vsr_decoder_acc=0.4121.ckpt
+pretrained_model: null
 CAM_path: /work/liuzehua/task/VSR/cnvsrc/main_log/2024-08-29/20-39-09-model5-Phase2-asr/model/epoch=79-train_loss=19.67.ckpt
 loss:
   asr2vsr_att_w: 0.9
@@ -49,7 +49,7 @@ data:
   max_frames_val: 1000
   dataset:
     root: ${code_root_dir}
-    label_dir: /work/liuzehua/task/VSR/cnvsrc/data/vsr2asr/model5/Phase3/LRS2
+    label_dir: AlignVSR/dataset/Phase3
     train_file: ${csv_name}.csv
     val_file: test.csv
     test_file: test.csv

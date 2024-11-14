@@ -51,7 +51,7 @@ data:
   max_frames_val: 1000
   dataset:
     root: ${code_root_dir}
-    label_dir: /work/liuzehua/task/VSR/cnvsrc/data/vsr2asr/model5/Phase2/LRS2
+    label_dir: AlignVSR/dataset/Phase2
     train_file: ${csv_name}.csv #code_root_dit/label_dir/train_file 
     val_file: test.csv
     test_file: test.csv

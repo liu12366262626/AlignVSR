@@ -1,6 +1,6 @@
 import multiprocessing
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 from tqdm import tqdm
 import csv
 
@@ -25,7 +25,7 @@ def task_on_gpu(gpu_id, path_list, task_id, return_dict, audio_data_root, video_
     from joblib import load
     import soundfile as sf
     import torchvision
-    from vsr2asr.model5.Phase3_vsr2asr_v2.transforms import VideoTransform
+    from align_vsr.Phase3_align_vsr.transforms import VideoTransform
     from tqdm import tqdm
 
 

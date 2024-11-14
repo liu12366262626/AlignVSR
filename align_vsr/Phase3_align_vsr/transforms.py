@@ -11,10 +11,10 @@ import torchaudio
 import torchvision
 
 
-NOISE_FILENAME = '/work/liuzehua/task/VSR/cnvsrc/datamodule/babble_noise.wav'
+NOISE_FILENAME = 'datamodule/babble_noise.wav'
 
 
-DICT_PATH = '/work/liuzehua/task/VSR/cnvsrc/vsr2asr/model5/English_unigram/unigram5000_units.txt'
+DICT_PATH = 'align_vsr/English_unigram/unigram5000_units.txt'
 
 
 class FunctionalModule(torch.nn.Module):

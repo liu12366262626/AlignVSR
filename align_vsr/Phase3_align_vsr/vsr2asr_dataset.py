@@ -1,15 +1,15 @@
 import sys
-sys.path.append('/work/liuzehua/task/VSR/cnvsrc')
+sys.path.append('./align_vsr')
 import os
 import logging
 import torch
 from pytorch_lightning import LightningDataModule
-from vsr2asr.model5.Phase3_vsr2asr_v2.samplers import (
+from align_vsr.Phase3_align_vsr.samplers import (
     ByFrameCountSampler,
     DistributedSamplerWrapper,
     RandomSamplerWrapper,
 )
-from vsr2asr.model5.Phase3_vsr2asr_v2.transforms import AudioTransform, VideoTransform
+from align_vsr.Phase3_align_vsr.transforms import AudioTransform, VideoTransform
 import torchaudio
 import torchvision
 from transformers import (
