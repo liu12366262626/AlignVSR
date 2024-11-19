@@ -6,14 +6,17 @@
 
 # Data Strcuture
 
+```
+$ tree
+.
 LRS2-BBC
-├── labels
 ├── lrs2
 │   ├── lrs2_text_seg24s
 │   │   ├── main
 │   │   ├── pretrain
 │   ├── lrs2_video_seg24s
-├── LRS2-TED
+
+```
 
 
 # Preprocess
