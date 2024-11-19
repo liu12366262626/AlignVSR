@@ -4,6 +4,17 @@
     <img src="example.gif" width="256" />
 </div>
 
+# Data Strcuture
+
+LRS2-BBC
+├── labels
+├── lrs2
+│   ├── lrs2_text_seg24s
+│   │   ├── main
+│   │   ├── pretrain
+│   ├── lrs2_video_seg24s
+├── LRS2-TED
+
 
 # Preprocess
 We have adopted a consistent approach with the [AUTO-AVSR repository](https://github.com/mpc001/auto_avsr) for preprocessing the LRS2 and Single datasets.
