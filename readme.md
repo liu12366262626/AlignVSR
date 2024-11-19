@@ -7,8 +7,6 @@
 # Data Strcuture
 
 ```
-$ tree
-.
 LRS2-BBC
 ├── lrs2
 │   ├── lrs2_text_seg24s
