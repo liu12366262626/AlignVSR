@@ -8,7 +8,7 @@ This repository provides example training (`train.csv`) and testing (`test.csv`)
   Indicates the dataset source, in this case, `lrs2`.
 
 - **Column 2**: Relative Path to the Video File  
-  Specifies the location of the video file relative to the dataset root, e.g., `lrs2_video_seg24s/main/5535415699068794046/00001.wav`.
+  Specifies the location of the video file relative to the dataset root, e.g., `lrs2_video_seg24s/main/5535415699068794046/00001.mp4`.
 
 - **Column 3**: Number of Video Frames  
   Represents the total number of frames in the video sample, e.g., `35`.
