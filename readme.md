@@ -25,7 +25,7 @@ LRS2-BBC
 ```
 
 
-# 1. Environment Setup and preprocess
+# 1. Environment Setup and Preprocess
 We have adopted a consistent approach with the [AUTO-AVSR repository](https://github.com/mpc001/auto_avsr) for preprocessing the LRS2 and Single datasets.
 Then, following the steps from [AUTO-AVSR (preparation)](https://github.com/mpc001/auto_avsr/tree/main/preparation), we process the LRS2 and CNVSRC.Single datasets to generate the corresponding `train.csv` and `test.csv`.
 
