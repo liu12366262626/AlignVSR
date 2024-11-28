@@ -62,6 +62,8 @@ python generate_audio.py --root_dir /[path-to-origin_LRS2_data] a --dst_path /[p
 - `--root_dir` /path/to/LRS2: Specifies the path to the input dataset (LRS2).
 - `--dst_path` /path/to/preprocess2: Specifies the path where the audio data should be stored.
 
+
+Finally , the videos will be processed into a size of 96x96, at 25fps, and the audio will be processed into mono with a 16k sample rate.
 # 2. Phase1-K-means
 For the LRS2 and CNVSRC.Single datasets, we randomly sample a portion of the audio data from the training set to train a k-means model with a total of 200 clusters. For specific steps, please refer to [this link](https://github.com/liu12366262626/AlignVSR/tree/master/align_vsr/Phase1_k-means_cluster). After completing this step, we will obtain the k-means model for the next phase of training.
 
