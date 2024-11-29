@@ -35,7 +35,7 @@ This guide will walk you through the process of setting up the `AlignVSR` enviro
 
 ```
 git clone git@github.com:liu12366262626/AlignVSR.git
-conda env create -f alignvsr_env.yml 
+conda env create -f alignvsr_env.yaml 
 conda activate alignvsr
 cd tools/face_alignment 
 pip install --editable .

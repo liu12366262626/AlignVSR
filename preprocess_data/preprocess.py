@@ -59,7 +59,7 @@ def task_on_gpu(gpu_id, filelist):
         pbar.update()
 
     print(f"Rank {rank} finish {len(filelist)} video file")
-    with open(f"preprocess_data/_failed_{gpu_id}.txt", 'a') as fp:
+    with open(f"failed_{gpu_id}.txt", 'a') as fp:
         fp.write('\n'.join(failed))
 
 
