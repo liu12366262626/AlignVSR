@@ -75,17 +75,17 @@ def extract_and_save_audio(mp4_file, root_folder, output_root, target_sample_rat
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser(description="Extract audio from MP4 files and save as WAV.")
-    parser.add_argument('--root_folder', type=str, required=True, help="Path to the folder containing MP4 files.")
-    parser.add_argument('--output_root', type=str, required=True, help="Path to the folder to save extracted audio.")
+    parser.add_argument('--root_dir', type=str, required=True, help="Path to the folder containing MP4 files.")
+    parser.add_argument('--dst_path', type=str, required=True, help="Path to the folder to save extracted audio.")
     
     args = parser.parse_args()
     
     # Find all MP4 files
-    mp4_files = find_mp4_files(args.root_folder)
+    mp4_files = find_mp4_files(args.root_dir)
     
     # Extract and save audio for each MP4 file
     for mp4_file in mp4_files:
-        extract_and_save_audio(mp4_file, args.root_folder, args.output_root)
+        extract_and_save_audio(mp4_file, args.root_dir, args.dst_path)
 
 if __name__ == "__main__":
     main()

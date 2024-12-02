@@ -57,7 +57,7 @@ After preprocessing all the video files, you need to generate corresponding audi
 
 ```
 cd preprocess_data
-python generate_audio.py --root_dir /[path-to-origin_LRS2_data] a --dst_path /[path-to-save-preprocess_data]/data
+python generate_audio.py --root_dir /[path-to-origin_LRS2_data]  --dst_path /[path-to-save-preprocess_data]/data
 ```
 - `--root_dir` /path/to/LRS2: Specifies the path to the input dataset (LRS2).
 - `--dst_path` /path/to/preprocess2: Specifies the path where the audio data should be stored.

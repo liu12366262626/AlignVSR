@@ -26,7 +26,7 @@ The script uses command-line arguments to specify input/output paths and other p
 Assuming the pre-trained model is located at `AlignVSR/checkpoints/English-hubert-large`, audio files are located at `[your lrs2 path]/lrs2/lrs2_video_seg24s/pretrain`, and we want to save the KMeans model to `AlignVSR/checkpoints/k-means`, you can run the following command:
 
 ```bash
-python wav2vec2_clustering.py \
+python main.py \
     --model_path AlignVSR/checkpoints/English-hubert-large \
     --folder_path [your lrs2 path]/lrs2/lrs2_video_seg24s/pretrain \
     --save_path AlignVSR/checkpoints/k-means \
