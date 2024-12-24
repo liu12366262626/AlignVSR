@@ -26,9 +26,6 @@ LRS2-BBC
 
 
 # 1. Environment Setup and Preprocess
-We have adopted a consistent approach with the [AUTO-AVSR repository](https://github.com/mpc001/auto_avsr) for preprocessing the LRS2 and Single datasets.
-Then, following the steps from [AUTO-AVSR (preparation)](https://github.com/mpc001/auto_avsr/tree/main/preparation), we process the LRS2 and CNVSRC.Single datasets to generate the corresponding `train.csv` and `test.csv`.
-
 ## 1.1 AlignVSR Environment Setup
 
 This guide will walk you through the process of setting up the `AlignVSR` environment, installing necessary dependencies, and preparing for preprocessing.
@@ -46,21 +43,9 @@ pip install --editable .
 ## 1.2 Preprocess
 
 Preprocess Dataset
-```
-cd preprocess_data
-python preprocess.py --root_dir /[path-to-origin_LRS2_data] --dst_path /[path-to-save-preprocess_data]
-```
-- `--root_dir` /path/to/LRS2: Specifies the path to the input dataset (LRS2).
-- `--dst_path` /path/to/preprocess2: Specifies the path where the preprocessed data should be stored.
+We have adopted a consistent approach with the [AUTO-AVSR repository](https://github.com/mpc001/auto_avsr) for preprocessing the LRS2 and Single datasets.
+Then, following the steps from [AUTO-AVSR (preparation)](https://github.com/mpc001/auto_avsr/tree/main/preparation), we process the LRS2 and CNVSRC.Single datasets to generate the corresponding `train.csv` and `test.csv`.
 
-After preprocessing all the video files, you need to generate corresponding audio files,the code is:
-
-```
-cd preprocess_data
-python generate_audio.py --root_dir /[path-to-origin_LRS2_data]  --dst_path /[path-to-save-preprocess_data]/data
-```
-- `--root_dir` /path/to/LRS2: Specifies the path to the input dataset (LRS2).
-- `--dst_path` /path/to/preprocess2: Specifies the path where the audio data should be stored.
 
 
 Finally , the videos will be processed into a size of 96x96, at 25fps, and the audio will be processed into mono with a 16k sample rate.
